@@ -1,6 +1,8 @@
 .calculator {
-  height: 600px;
-  width: 400px;
+  height: 100vh;
+  width: 90vw;
+  max-height: 600px;
+  max-width: 400px;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
   display: grid;
   grid-template-columns: 1fr;
@@ -9,42 +11,177 @@
   overflow: hidden;
 }
 .calculator-display {
-  background-color: #1e1e1e;
-  padding: 25px;
+  padding: 10px 25px 10px;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  font-size: 45px;
+  text-overflow: ellipsis;
+}
+.calculator-display_light {
+  background-color: #ffffff;
+  color: #000;
+}
+.calculator-display_dark {
+  background-color: #1e1e1e;
   color: #fff;
-  font-size: 40px;
+}
+.error-message {
+  font-size: 12px;
+  margin-top: 10px;
+  color: #adadad;
+  opacity: 0;
+}
+.error-visible {
+  opacity: 1;
 }
 .calculator-buttons {
-  background: linear-gradient(210deg, #373737, #202020);
   padding: 25px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
+  justify-items: center;
+}
+.calculator-buttons_light {
+  background: #fff;
+  border-top: 1px solid #d6d6d6
+}
+.calculator-buttons_dark {
+  background: linear-gradient(210deg, #373737, #202020);
 }
 .calculator-buttons__item {
-  height: 60px;
-  width: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background-color: #fff;
   /*box-shadow: 0px 0px 9px 4px rgba(78, 78, 78, 0.24);*/
   text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  background-color: #f0f0f0;
 }
+@media (max-width: 760px) {
+  .calculator-buttons__item {
+    width: 65px;
+    height: 65px;
+  }
+  .calculator-buttons {
+    padding: 15px;
+    gap: 10px 10px;
+    align-content: stretch;
+  }
+}
+/*.calculator-buttons_light {
+
+ }
+.calculator-buttons_dark {
+  background-color: #fff;
+}*/
 .calculator-buttons__item:hover {
   /*background-color: #1e1e1e;*/
+  filter: brightness(85%);
+}
+.calculator-buttons__item.operation:hover {
+  filter: brightness(110%);
+}
+.calculator-buttons__item_light {
+  background: #e8e8e8;
+}
+.calculator-buttons__item_dark {
+  
 }
 .calculator-buttons__item:active {
   box-shadow: inset 0px 0px 8px 1px rgba(0, 0, 0, 0.47);
 }
 .operation {
-  background: linear-gradient(30deg, #fb946f, #fbbd60);
+  /*background: linear-gradient(30deg, #fb946f, #fbbd60);*/
+  background: #fdab64;
+  color: #fff;
+}
+.calculator-buttons__item_light.operation {
+  background: rgb(98, 196, 200);
+}
+.calculator-buttons__item_light:active {
+  box-shadow: inset 0px 0px 8px 1px rgba(0, 0, 0, 0.22);
+}
+/*.calculator-buttons__item.operation:nth-of-type(-3) {
+  background-color: #fff;
+}*/
+.result-button {
+  grid-row: 4 / span 2;
+  grid-column: 4 / 5;
+}
+.result-button > button {
+  height: 100%;
+  border-radius: 75px;
+  background: linear-gradient(30deg, #d15a3d 20%, #ffc266);
 }
 .result {
   color: #fba768;
   text-shadow: 0 0 6px rgba(243, 184, 146, 0.6);
+}
+.calculator-display_light.result {
+  color: rgb(98, 196, 200);
+  text-shadow: 0 0 4px rgba(53, 138, 142, 0.47);
+}
+.switch-theme-button {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 20px;
+  margin-bottom: 15px;
+  margin-right: auto;
+}
+
+/* Hide default HTML checkbox */
+.switch-theme-button input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #505050;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #303030;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(14px);
+  -ms-transform: translateX(14px);
+  transform: translateX(14px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
