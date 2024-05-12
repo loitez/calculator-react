@@ -2,70 +2,39 @@ import styles from './App.module.css';
 import data from './data.json';
 import {useState} from "react";
 import React from 'react';
+import { ReactComponent as IconSun } from './sun.svg'
+import { ReactComponent as IconMoon } from './moon.svg'
 
 export const App = () => {
     const [symbols, setSymbols] = useState(data);
-
-    const [operand1, setOperand1] = useState('');
-    const [operand2, setOperand2] = useState('');
-    const [operator, setOperator] = useState('');
     const [result, setResult] = useState('');
     const [theme, setTheme] = useState('light');
     const [expression, setExpression] = useState('0');
     const [error, setError] = useState('');
     let isFirstBracket = expression.indexOf('(') !== -1;
-
-
-    /*function onOperandClick(symbol, e) {
-        setResult('')
-        operator ? setOperand2(operand2 + symbol.value) : setOperand1(operand1 + symbol.value)
-    }
-    function onOperatorClick(symbol, e) {
-        if (symbol.value === 'С') {
-            setOperand2('')
-            setOperand1('')
-            setOperator('')
-            setResult('')
-        }
-        else if (symbol.value === '=') {
-            if (operand1 && operator && operand2) {
-                let operationResult = eval(operand1 + ` ${operator} ` + operand2)
-                setResult(String(operationResult))
-                setOperand2('')
-            }
-                // else {
-            //     setError('Введите пример')
-            // }
-        } else {
-            if (result) {
-                setOperand1(result)
-                setResult('')
-            }
-            if (operand1) {
-                setOperator(symbol.value)
-            }
-             // operand1 ?  setOperator(symbol.value) : setError('Введите первый операнд')
-        }
-    }*/
+    let isLastBracket = expression.indexOf(')') !== -1;
 
     function onOperandClick(symbol) {
+        setError('')
         setResult('')
         if (expression.length === 12) {
-            setError('Извините, вы не можете ввести больше 12 значений')
+            setError('Извините, вы не можете ввести больше 12 символов')
             return
         }
         if (expression[0] === '0') {
-            console.log('here')
-            let updatedExpression = symbol.value;
-            console.log(updatedExpression)
-            setExpression(updatedExpression);
-        } else {
             if (symbol.value === '0') {
-                return
+                if (String(expression).length === 1) {
+                    return
+                } else {
+                    setExpression(expression + symbol.value)
+                }
+            } else {
+                expression.length > 1 ? setExpression(expression + symbol.value) : setExpression(symbol.value)
             }
+
+        }
             else {
                 result ? setExpression(result + symbol.value) : setExpression(expression + symbol.value)
-            }
         }
 
     }
@@ -80,8 +49,12 @@ export const App = () => {
         switch (symbol.value) {
             case '←':
                 setError('')
-                let updatedExpression = expression.slice(0, -1)
-                setExpression(updatedExpression)
+                if (result) {
+                    result.length === 1 ? setExpression('0') : setExpression(result.slice(0, -1))
+                } else {
+                    let updatedExpression = expression.slice(0, -1)
+                    expression.length === 1 ? setExpression('0') : setExpression(updatedExpression)
+                }
                 break
             case 'С':
                 setExpression('0')
@@ -91,49 +64,57 @@ export const App = () => {
             case '=':
                 if (expression) {
                     let updatedExpression = expression;
-                    if (isFirstBracket) {
+                    if (isFirstBracket && !isLastBracket) {
                         setExpression(expression + ')')
                         updatedExpression = expression + ')'
                     }
-                    let operationResult = eval(updatedExpression)
-                    if (String(operationResult).length > 13) {
-                        operationResult = operationResult.toFixed(10)
+                    if (Number.isNaN(parseFloat(expression[expression.length - 1]))) {
+                        setError('Введите операнд')
+                        setExpression(expression)
+                    } else {
+                        let operationResult = eval(updatedExpression)
+                        String(operationResult).length > 13 ? setResult(operationResult.toFixed(8)) : setResult(String(operationResult))
+                        setExpression('0')
                     }
-                    setResult(String(operationResult))
-                    setOperand2('')
-                    setExpression('0')
-                    break;
                 } else {
                     setResult(result)
                 }
+                break;
             case '( )':
-                if (expression) {
+                if (expression !== '0') {
                     if (isFirstBracket) {
                         setExpression(expression + ')')
                     } else if (Number.isNaN(parseFloat(expression[expression.length - 1]))) {
                         setExpression(expression + '(')
                     } else {
-                        setExpression(expression + '*' + '(')
+                        setExpression(expression + '*(')
                     }
                 } else {
-                    setExpression('(')
+                    result ? setExpression(result + '*(') : setExpression('(')
                 }
+                break
+            case '-':
+                expression === '0' ? setExpression('-') : setExpression(expression + symbol.value)
 
         }
     }
 
     function watchSwitch() {
         theme === 'light' ? setTheme('dark') : setTheme('light');
-        console.log(theme)
+        return theme
     }
-
 
   return (
     <div className={styles.calculator}>
         <div className={styles['calculator-display'] + ' ' + (result && styles['result'] + ' ') + styles['calculator-display_' + theme]}>
                 <label className={styles['switch-theme-button']}>
                     <input type="checkbox" onClick={() => watchSwitch(this)}/>
-                    <span className={styles['slider'] + ' ' + styles['round']}></span>
+                    <span className={styles['slider'] + ' ' + styles['round'] + ' ' + theme}>
+                        {theme === 'dark' && <IconMoon className={styles["switch-theme-icon_dark"]}/>}
+                        {theme === 'light' && <IconSun className={styles["switch-theme-icon_light"]}/>}
+
+
+                    </span>
                 </label>
             <div>
                 {result ? result : expression}

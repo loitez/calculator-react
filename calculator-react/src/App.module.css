@@ -18,6 +18,7 @@
   justify-content: center;
   font-size: 45px;
   text-overflow: ellipsis;
+  position: relative;
 }
 .calculator-display_light {
   background-color: #ffffff;
@@ -32,6 +33,9 @@
   margin-top: 10px;
   color: #adadad;
   opacity: 0;
+  position: absolute;
+  right: 20px;
+  bottom: 5px;
 }
 .error-visible {
   opacity: 1;
@@ -42,6 +46,10 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   justify-items: center;
+}
+.calculator-buttons > li {
+  display: flex;
+  align-items: flex-end;
 }
 .calculator-buttons_light {
   background: #fff;
@@ -126,18 +134,39 @@
   color: rgb(98, 196, 200);
   text-shadow: 0 0 4px rgba(53, 138, 142, 0.47);
 }
+.result-button > button.calculator-buttons__item_light {
+  background: linear-gradient(30deg, #008580 15%, #62c3c7)
+}
 .switch-theme-button {
   position: relative;
   display: inline-block;
-  width: 35px;
+  width: 40px;
   height: 20px;
-  margin-bottom: 15px;
   margin-right: auto;
 }
 
 /* Hide default HTML checkbox */
 .switch-theme-button input {display:none;}
-
+.switch-theme-icon_light {
+  position: absolute;
+  height: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 0;
+}
+.switch-theme-icon_dark {
+  position: absolute;
+  height: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+}
+.switch-theme-icon_dark > path {
+  fill: #fff;
+}
+.switch-theme-icon_light > path {
+  fill: #fff;
+}
 /* The slider */
 .slider {
   position: absolute;
@@ -146,7 +175,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #45b0b2;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -172,16 +201,21 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(14px);
-  -ms-transform: translateX(14px);
-  transform: translateX(14px);
+  -webkit-transform: translateX(19px);
+  -ms-transform: translateX(19px);
+  transform: translateX(19px);
 }
 
 /* Rounded sliders */
 .slider.round {
   border-radius: 34px;
 }
-
+.round.dark > .switch-theme-icon_dark {
+  opacity: 1;
+}
+.round.light > .switch-theme-icon_light {
+  opacity: 1;
+}
 .slider.round:before {
   border-radius: 50%;
 }
